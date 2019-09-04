@@ -105,6 +105,31 @@ const Mutation = {
         return deletedPost[0]
     },
 
+    updatePost(parent, args, { db }, info ) {
+        const { id, data } = args
+
+        const post = db.posts.find((post) => post.id === id)
+
+        if(!post) {
+            throw new Error('Post not found')
+        }
+
+        if (typeof data.title === 'string'){
+            post.title = data.title
+        }
+
+        if (typeof data.body === 'string') {
+            post.body = data.body 
+        }
+
+        if (typeof data.published === 'boolean') {
+            post.published = data.published
+        }
+
+        return post
+
+    },
+
     createComment(parent, args, { db }, info) {
         const userExits = db.users.some((user) => user.id === args.data.author)
         const validPost = db.posts.some((post) => post.id === args.data.post && post.published)
